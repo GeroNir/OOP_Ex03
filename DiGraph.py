@@ -6,7 +6,7 @@ from collections import defaultdict
 
 class DiGraph:
 
-    def __init__(self, file):
+    def load(self, file):
         with open(file) as b1:
             f = json.load(b1)
         tmpEdges = f['Edges']
@@ -29,16 +29,26 @@ class DiGraph:
             self.Edges[key] = e
         tmpIn = {}
         tmpOut = {}
-        print(self.inEdges)
         for e in self.inEdges:
             key = e[0]['dest']
             tmpIn[key] = e
         for e in self.outEdges:
             key = e[0]['src']
             tmpOut[key] = e
-
         self.outEdges = tmpOut
         self.inEdges = tmpIn
+
+    def __init__(self):
+        self.Edges = {}
+        self.Nodes = {}
+        self.nodeSize = 0
+        self.edgeSize = 0
+        self.MC = 0
+        self.outEdges = {}
+        self.inEdges = {}
+        tmpIn = {}
+        tmpOut = {}
+
     def v_size(self) -> int:
         return self.nodeSize
 
@@ -50,12 +60,12 @@ class DiGraph:
 
     def all_in_edges_of_node(self, id) -> dict:
         tmp = {}
-        tmp[id] = self.inEdges.get(id)
+        tmp[id] = self.inEdges[id]
         return tmp
 
     def all_out_edges_of_node(self, id) -> dict:
         tmp = {}
-        tmp[id] = self.outEdges.get(id)
+        tmp[id] = self.outEdges[id]
         return tmp
 
     def get_mc(self) -> int:
@@ -68,16 +78,21 @@ class DiGraph:
             self.Edges[key]
             return False
         except:
-            e = {}
-            e['src'] = src
-            e['w'] = weight
-            e['dest'] = dest
-            self.Edges[key] = e
-            self.inEdges[e['dest']].insert(e)
-            self.outEdges[e['src']].insert(e)
-            self.MC += 1
-            self.edgeSize += 1
-            return True
+            try:
+                self.Nodes[src]
+                self.Nodes[dest]
+                e = {}
+                e['src'] = src
+                e['w'] = weight
+                e['dest'] = dest
+                self.Edges[key] = e
+                self.inEdges[e['dest']] = e
+                self.outEdges[e['src']] = e
+                self.MC += 1
+                self.edgeSize += 1
+                return True
+            except:
+                return False
 
     def add_node(self, node_id: int, pos: tuple = None) -> bool:  # O(n) n = nodeSize
         try:
@@ -90,6 +105,8 @@ class DiGraph:
             self.Nodes[node_id] = n
             self.MC += 1
             self.nodeSize += 1
+            self.inEdges[node_id] = n
+            self.outEdges[node_id] = n
             return True
 
     def remove_node(self, node_id: int) -> bool:
@@ -119,29 +136,47 @@ class DiGraph:
             for n in self.outEdges[node_id1]:
                 if n['dest'] == node_id2 and n['src'] == node_id1:
                     self.outEdges[node_id1].remove(n)
+            self.MC += 1
             return True
         return False
 
-file = r'C:\Users\Hagai\PycharmProjects\OOP_Ex4\data\A0.json'
-g = DiGraph(file)
-print(g.v_size())
-print(g.e_size())
-print(g.Edges)
-print(g.get_all_v())
-print(g.all_in_edges_of_node(0))
-print("")
-print(g.all_out_edges_of_node(1))
-print(g.get_mc())
-print(g.add_edge(5, 6, 1.7389217398173891))
-print(g.all_in_edges_of_node(6))
-#print(g.add_node(12, (35.18753, 32.1037822, 0.0)))
-print("")
-print(g.remove_node(0))
-print(g.all_in_edges_of_node(0))
-print(g.all_out_edges_of_node(0))
-print(g.get_all_v())
-print(g.Edges)
-print(g.nodeSize)
-print(g.edgeSize)
-print(g.get_mc())
-print(g.remove_edge(1,2))
+
+# file = r'C:\Users\Hagai\PycharmProjects\OOP_Ex4\data\A0.json'
+# g = DiGraph(file)
+# print(g.v_size())
+# print(g.e_size())
+# print(g.Edges)
+# print(g.get_all_v())
+# print(g.all_in_edges_of_node(0))
+# print("")
+# print(g.all_out_edges_of_node(1))
+# print(g.get_mc())
+# print(g.add_edge(5, 6, 1.7389217398173891))
+# print(g.all_in_edges_of_node(6))
+# #print(g.add_node(12, (35.18753, 32.1037822, 0.0)))
+# print("")
+# print(g.remove_node(0))
+# print(g.all_in_edges_of_node(0))
+# print(g.all_out_edges_of_node(0))
+# print(g.get_all_v())
+# print(g.Edges)
+# print(g.nodeSize)
+# print(g.edgeSize)
+# print(g.get_mc())
+# print(g.remove_edge(1,2))
+
+# g = DiGraph()
+# g.add_node(0, (1, 2, 3))
+# g.add_node(1, (1, 2, 3))
+# g.add_edge(0, 1, 1.36178)
+# print(g.get_all_v())
+# print(g.Edges)
+# print(g.inEdges)
+# print(g.outEdges)
+# g.add_edge(1,0, 1.46278)
+# print(g.Edges)
+# print(g.all_in_edges_of_node(0))
+# print(g.all_in_edges_of_node(1))
+# print(g.all_out_edges_of_node(0))
+# print(g.all_out_edges_of_node(1))
+
