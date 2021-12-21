@@ -69,6 +69,19 @@ class DiGraph:
         self.Nodes.insert(self.nodeSize, n)
         return True
 
+    def remove_node(self, node_id: int) -> bool:
+        for n in self.Nodes:
+            if n['id'] == node_id:
+                self.Nodes.remove(n)
+                return True
+        return False
+
+    def remove_edge(self, node_id1: int, node_id2: int) -> bool:
+        for e in self.Edges:
+            if e['src'] == node_id1 and e['dest'] == node_id2:
+                self.Edges.remove(e)
+                return True
+        return False
 file = r'C:\Users\Hagai\PycharmProjects\OOP_Ex4\data\A0.json'
 g = DiGraph(file)
 print(g.v_size())
