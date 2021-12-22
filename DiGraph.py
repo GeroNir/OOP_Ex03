@@ -1,8 +1,10 @@
 import json
 from collections import defaultdict
-
+import string
 
 # TODO: exceptions
+from typing import cast
+
 
 class DiGraph:
 
@@ -140,43 +142,26 @@ class DiGraph:
     def __repr__(self):
         return f'DiGraph\nEdges:\n{self.Edges}\nNodes:\n{self.Nodes}'
 
+    def get_node(self, node_id: int):
+        return self.get_all_v().get(node_id)
 
-# file = r'C:\Users\Hagai\PycharmProjects\OOP_Ex4\data\A0.json'
-# g = DiGraph(file)
-# print(g.v_size())
-# print(g.e_size())
-# print(g.Edges)
-# print(g.get_all_v())
-# print(g.all_in_edges_of_node(0))
-# print("")
-# print(g.all_out_edges_of_node(1))
-# print(g.get_mc())
-# print(g.add_edge(5, 6, 1.7389217398173891))
-# print(g.all_in_edges_of_node(6))
-# #print(g.add_node(12, (35.18753, 32.1037822, 0.0)))
-# print("")
-# print(g.remove_node(0))
-# print(g.all_in_edges_of_node(0))
-# print(g.all_out_edges_of_node(0))
-# print(g.get_all_v())
-# print(g.Edges)
-# print(g.nodeSize)
-# print(g.edgeSize)
-# print(g.get_mc())
-# print(g.remove_edge(1,2))
+    def get_pos(self, node_id: int):
+        return self.get_node(node_id).get('pos')
 
-# g = DiGraph()
-# g.add_node(0, (1, 2, 3))
-# g.add_node(1, (1, 2, 3))
-# g.add_edge(0, 1, 1.36178)
-# print(g.get_all_v())
-# print(g.Edges)
-# print(g.inEdges)
-# print(g.outEdges)
-# g.add_edge(1,0, 1.46278)
-# print(g.Edges)
-# print(g.all_in_edges_of_node(0))
-# print(g.all_in_edges_of_node(1))
-# print(g.all_out_edges_of_node(0))
-# print(g.all_out_edges_of_node(1))
+    def get_x(self, node_id: int):
+        s = self.get_pos(node_id)
+        s: cast(string, s)
+        s = s.split(',')
+        return float(s[0])
 
+    def get_y(self, node_id: int):
+        s = self.get_pos(node_id)
+        s: cast(string, s)
+        s = s.split(',')
+        return float(s[1])
+
+    def get_z(self, node_id: int):
+        s = self.get_pos(node_id)
+        s: cast(string, s)
+        s = s.split(',')
+        return float(s[2])

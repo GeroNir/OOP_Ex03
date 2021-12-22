@@ -6,13 +6,13 @@ from typing import List
 from DiGraph import DiGraph
 from src import GraphInterface
 import json
-import matplotlib as plt
+import matplotlib as gui
 
 
 class GraphAlgo():
 
-    def __init__(self, g):
-        self.graph = g
+    def __init__(self):
+        self.graph = DiGraph()
 
     def get_graph(self) -> GraphInterface:
         return self.graph
@@ -58,6 +58,7 @@ class GraphAlgo():
         shortest_path = dist[id2]
         tmp = prev[id2]
         ans = []
+        ans.insert(0, id2)
         ans.insert(0, tmp)
         while tmp != id1:
             tmp = prev[tmp]
@@ -90,9 +91,9 @@ class GraphAlgo():
             if visited.get(curr) is False:
                 for e in self.get_graph().Edges.values():
                     distance = dist[curr] + float(e['w'])
-                    if distance < dist[int(e['dest'])]:
+                    if distance < dist[int(e['dest'])] and e['src'] == curr:
                         dist[int(e['dest'])] = distance
-                        prev[int(e['dest'])] = int(e['src'])
+                        prev[e['dest']] = int(e['src'])
                         queue.put(int(e['dest']))
             visited[curr] = True
         return dist, prev
@@ -118,25 +119,7 @@ class GraphAlgo():
             return False
 
     def dijkstra_max(self, src):
-        visited = {}
-        prev = {}
-        queue = Queue()
-        dist = {}
-        for n in self.get_graph().get_all_v():
-            dist[n] = float('inf')
-            visited[n] = False
-        dist[src] = 0
-        queue.put(src)
-        while not queue.empty():
-            curr = queue.get()
-            if visited.get(curr) is False:
-                for e in self.get_graph().Edges.values():
-                    distance = dist[curr] + float(e['w'])
-                    if distance < dist[int(e['dest'])]:
-                        dist[int(e['dest'])] = distance
-                        prev[int(e['dest'])] = int(e['src'])
-                        queue.put(int(e['dest']))
-            visited[curr] = True
+        dist, prev = self.dijkstra(src)
         max = -1
         i = 0
         indx = 0
@@ -243,14 +226,39 @@ class GraphAlgo():
             print("The Graph is not Connected")
 
     def plot_graph(self) -> None:
-        pass
+        graph = self.graph
+        for src in graph.get_all_v().keys():
+            for dest, w in graph.all_in_edges_of_node(src).items():
+                radius = 0.01
+                x_src, y_src, z_src = graph.get_node(src).pos
+                x_dest, y_dest, z_dest = graph.get_node(dest).pos
+                distance = math.sqrt((x_src - x_dest) * 2 + (y_src - y_dest) * 2)
+                direction_x = (x_src - x_dest) / distance
+                direction_y = (y_src - y_dest) / distance
+                x_dest = direction_x * radius + x_dest
+                y_dest = direction_y * radius + y_dest
+                x_src = direction_x * (-radius) + x_src
+                y_src = direction_y * (-radius) + y_src
+                gui.arrow(x_src, y_src, (x_dest - x_src), (y_dest - y_src), length_includes_head=True,
+                          width=0.003 * distance, head_width=0.1 * distance, color='black')
+
+                for node in graph.get_all_v().values():
+                    if node.pos is None:
+                        node.pos = (random.uniform(0, 5), random.uniform(0, 5), 0)
+                    gui.text(node.pos[0], node.pos[1], str(node.key), horizontalalignment='center',
+                             verticalalignment='center',
+                             bbox=dict(facecolor='red', edgecolor='black', boxstyle='circle, pad=0.1'))
+                gui.show()
+
 
 
 g = DiGraph()
-algo = GraphAlgo(g)
-algo.load_from_json('data/not_connected.json')
-print(algo.centerPoint())
+algo = GraphAlgo()
+# algo.load_from_json('data/not_connected.json')
+#print(algo.centerPoint())
 algo.load_from_json('data/A0.json')
 print(algo.centerPoint())
-algo.plot_graph()
+# print(algo.shortest_path(1,7))
+print(algo.shortest_path(1,7))
+# algo.plot_graph()
 
