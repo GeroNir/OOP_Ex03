@@ -27,16 +27,16 @@ class DiGraph:
             self.inEdges[e['dest']].insert(0, e)
             self.outEdges[e['src']].insert(0, e)
             self.Edges[key] = e
-        tmpIn = {}
-        tmpOut = {}
-        for e in self.inEdges:
-            key = e[0]['dest']
-            tmpIn[key] = e
-        for e in self.outEdges:
-            key = e[0]['src']
-            tmpOut[key] = e
-        self.outEdges = tmpOut
-        self.inEdges = tmpIn
+        # tmpIn = {}
+        # tmpOut = {}
+        # for e in self.inEdges:
+        #     key = e[0]['dest']
+        #     tmpIn[key] = e
+        # for e in self.outEdges:
+        #     key = e[0]['src']
+        #     tmpOut[key] = e
+        # self.outEdges = tmpOut
+        # self.inEdges = tmpIn
 
     def __init__(self):
         self.Edges = {}
@@ -48,6 +48,7 @@ class DiGraph:
         self.inEdges = {}
         tmpIn = {}
         tmpOut = {}
+        self.visited = []
 
     def v_size(self) -> int:
         return self.nodeSize
@@ -105,8 +106,8 @@ class DiGraph:
             self.Nodes[node_id] = n
             self.MC += 1
             self.nodeSize += 1
-            self.inEdges[node_id] = n
-            self.outEdges[node_id] = n
+            # self.inEdges[node_id] = n
+            # self.outEdges[node_id] = n
             return True
 
     def remove_node(self, node_id: int) -> bool:
@@ -130,15 +131,14 @@ class DiGraph:
         key = str(node_id1) + "," + str(node_id2)
         rm = self.Edges.pop(key, None)
         if (rm != None):
-            for n in self.inEdges[node_id2]:
-                if n['dest'] == node_id2 and n['src'] == node_id1:
-                    self.inEdges[node_id2].remove(n)
-            for n in self.outEdges[node_id1]:
-                if n['dest'] == node_id2 and n['src'] == node_id1:
-                    self.outEdges[node_id1].remove(n)
+            del self.outEdges[node_id1]
+            del self.inEdges[node_id2]
             self.MC += 1
             return True
         return False
+
+    def __repr__(self):
+        return f'DiGraph\nEdges:\n{self.Edges}\nNodes:\n{self.Nodes}'
 
 
 # file = r'C:\Users\Hagai\PycharmProjects\OOP_Ex4\data\A0.json'
