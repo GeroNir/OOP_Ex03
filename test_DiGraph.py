@@ -93,3 +93,33 @@ class TestDiGraph(TestCase):
         self.assertTrue(g.remove_edge(0,1))
         self.assertFalse(g.remove_edge(0,1))
         self.assertEqual(1, g.get_mc())  # 5 because it have 4 edges that goes in/out
+
+    def test_get_node(self):
+        g = DiGraph()
+        file = 'data/A0.json'
+        g.load(file)
+        print(g.get_node(2))
+
+    def test_get_pos(self):
+        g = DiGraph()
+        file = 'data/A0.json'
+        g.load(file)
+        print(g.get_pos(2))
+
+    def test_get_x(self):
+        g = DiGraph()
+        file = 'data/A0.json'
+        g.load(file)
+        print(g.get_x(2))
+
+    def test_get_y(self):
+        g = DiGraph()
+        file = 'data/A0.json'
+        g.load(file)
+        print(g.get_y(2))
+
+    def test_get_z(self):
+        g = DiGraph()
+        file = 'data/A0.json'
+        g.load(file)
+        print(g.get_z(2))
