@@ -7,9 +7,10 @@ from DiGraph import DiGraph
 from src import GraphInterface
 import json
 import matplotlib.pyplot as gui
+from src.GraphAlgoInterface import GraphAlgoInterface
 
 
-class GraphAlgo():
+class GraphAlgo(GraphAlgoInterface):
 
     def __init__(self):
         self.graph = DiGraph()
