@@ -9,7 +9,7 @@
 1.	https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.arrow.html
 #### `Dijkstra's Algorithm`:
 2.	https://www.geeksforgeeks.org/dijkstras-shortest-path-algorithm-greedy-algo-7/
-#### `Depth-first search (BFS)`:
+#### `Breadth-first search (BFS)`:
 3.	https://favtutor.com/blogs/breadth-first-search-python
 #### `Traveling Salesman Problem (TSP)`:
 4.	https://www.geeksforgeeks.org/traveling-salesman-problem-tsp-implementation/
