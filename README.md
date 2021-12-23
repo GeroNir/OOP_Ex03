@@ -4,6 +4,8 @@
 
 *Nir Geron 315874925*  
  
+ This project is used for an implementation of a directed Weighted Graph in python language.
+ 
 # Literature:
 #### `1.Arrows in Matplotlib`:
 	https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.arrow.html
