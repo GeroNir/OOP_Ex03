@@ -4,9 +4,9 @@ import string
 
 # TODO: exceptions
 from typing import cast
+from src.GraphInterface import GraphInterface
 
-
-class DiGraph:
+class DiGraph(GraphInterface):
 
     def load(self, file):
         with open(file) as b1:
@@ -29,16 +29,6 @@ class DiGraph:
             self.inEdges[e['dest']].insert(0, e)
             self.outEdges[e['src']].insert(0, e)
             self.Edges[key] = e
-        # tmpIn = {}
-        # tmpOut = {}
-        # for e in self.inEdges:
-        #     key = e[0]['dest']
-        #     tmpIn[key] = e
-        # for e in self.outEdges:
-        #     key = e[0]['src']
-        #     tmpOut[key] = e
-        # self.outEdges = tmpOut
-        # self.inEdges = tmpIn
 
     def __init__(self):
         self.Edges = {}
