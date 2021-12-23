@@ -12,8 +12,11 @@ from src.GraphAlgoInterface import GraphAlgoInterface
 
 class GraphAlgo(GraphAlgoInterface):
 
-    def __init__(self):
-        self.graph = DiGraph()
+    def __init__(self, other = None):
+        if not other:
+            self.graph = DiGraph()
+        else:
+            self.graph = other
 
     def get_graph(self) -> GraphInterface:
         return self.graph
@@ -33,6 +36,19 @@ class GraphAlgo(GraphAlgoInterface):
             self.graph.outEdges = []
             self.graph.inEdges = []
             for n in tmpNodes:
+                try:
+                    tmpNodes[n['pos']]
+                except:
+                    node = {}
+                    x = 35 + random.random()
+                    y = 32 + random.random()
+                    z = 0.0
+                    pos = str(x) + "," + str(y) + "," + str(z)
+                    node["pos"] = pos
+                    node["id"] = n['id']
+                    del tmpNodes[n['id']]
+                    tmpNodes.insert(n['id'], node)
+                    n = node
                 self.graph.outEdges.insert(0, [])
                 self.graph.inEdges.insert(0, [])
                 self.graph.Nodes[n['id']] = n
@@ -41,16 +57,6 @@ class GraphAlgo(GraphAlgoInterface):
                 self.graph.inEdges[e['dest']].insert(0, e)
                 self.graph.outEdges[e['src']].insert(0, e)
                 self.graph.Edges[key] = e
-            # tmpIn = {}
-            # tmpOut = {}
-            # for e in self.graph.inEdges:
-            #     key = e[0]['dest']
-            #     tmpIn[key] = e
-            # for e in self.graph.outEdges:
-            #     key = e[0]['src']
-            #     tmpOut[key] = e
-            # self.graph.outEdges = tmpOut
-            # self.graph.inEdges = tmpIn
         except NotImplementedError:
             return False
 
@@ -246,7 +252,7 @@ class GraphAlgo(GraphAlgoInterface):
                     x_src = direction_x * (-radius) + x_src
                     y_src = direction_y * (-radius) + y_src
                     gui.arrow(x_src, y_src, (x_dest - x_src), (y_dest - y_src), length_includes_head=True,
-                              width=0.000003, head_width=0.00015, color="black")
+                              width=0.000003, head_width=0.015, color="black")
         for node in graph.get_all_v().keys():
             if graph.get_pos(node) is None:
                 node.pos = (random.uniform(0, 5), random.uniform(0, 5), 0)

@@ -1,34 +1,12 @@
 import json
 from collections import defaultdict
 import string
+import random
 
-# TODO: exceptions
 from typing import cast
 from src.GraphInterface import GraphInterface
 
 class DiGraph(GraphInterface):
-
-    def load(self, file):
-        with open(file) as b1:
-            f = json.load(b1)
-        tmpEdges = f['Edges']
-        tmpNodes = f['Nodes']
-        self.Edges = {}
-        self.Nodes = {}
-        self.nodeSize = len(tmpNodes)
-        self.edgeSize = len(tmpEdges)
-        self.MC = 0
-        self.outEdges = []
-        self.inEdges = []
-        for n in tmpNodes:
-            self.outEdges.insert(0, [])
-            self.inEdges.insert(0, [])
-            self.Nodes[n['id']] = n
-        for e in tmpEdges:
-            key = str(e['src']) + "," + str(e['dest'])
-            self.inEdges[e['dest']].insert(0, e)
-            self.outEdges[e['src']].insert(0, e)
-            self.Edges[key] = e
 
     def __init__(self):
         self.Edges = {}
@@ -92,12 +70,24 @@ class DiGraph(GraphInterface):
             self.Nodes[node_id]
             return False
         except:
-            n = {}
-            n["pos"] = pos
-            n["id"] = node_id
-            self.Nodes[node_id] = n
-            self.MC += 1
-            self.nodeSize += 1
+            if not pos:
+                n = {}
+                x = 35 + random.random()
+                y = 32 + random.random()
+                z = 0.0
+                pos = str(x) + "," + str(y) + "," + str(z)
+                n["pos"] = pos
+                n["id"] = node_id
+                self.Nodes[node_id] = n
+                self.MC += 1
+                self.nodeSize += 1
+            else:
+                n = {}
+                n["pos"] = pos
+                n["id"] = node_id
+                self.Nodes[node_id] = n
+                self.MC += 1
+                self.nodeSize += 1
             # self.inEdges[node_id] = n
             # self.outEdges[node_id] = n
             return True
