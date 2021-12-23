@@ -16,6 +16,16 @@ https://favtutor.com/blogs/breadth-first-search-python
 #### `5.graph using Dictionary`:
 https://www.geeksforgeeks.org/generate-graph-using-dictionary-python/
 
+### **how to start?**
+first clone this repository using this following command:
+ ```
+$git clone https://github.com/GeroNir/OOP_Ex03.git
+ ```
+ 
+# Running Time
+## [click here to see our Wiki 	:smiley: ](https://github.com/GeroNir/OOP_Ex04/wiki)
+
+
 
 # Algorithm Explaining 
 This time we've been asked to build an algorithm for graphs and make an interface that shows the best solution for the "Travelling Salesman Problem", which gave us a list of place that we must visit and returns the quickest way to pass the whole places.
@@ -77,17 +87,7 @@ And we have another function calls "connect" that make an edge between two nodes
 
 * `get_node(key)`-  returns the node with the given id if this node exist in this graph
 
-
-
 # UML diagram
 
  ![Alt text](https://github.com/GeroNir/OOP_Ex04/blob/master/data/pics/UML.png?raw=true)
  
-### **how to start?**
-first clone this repository using this following command:
- ```
-$git clone https://github.com/GeroNir/OOP_Ex03.git
- ```
- 
-# Running Time
-## [click here to see our Wiki 	:smiley: ](https://github.com/GeroNir/OOP_Ex04/wiki)
