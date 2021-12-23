@@ -5,14 +5,17 @@
 *Nir Geron 315874925*  
  
 # Literature:
-#### `Arrows in Matplotlib`:
-1.	https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.arrow.html
-#### `Dijkstra's Algorithm`:
-2.	https://www.geeksforgeeks.org/dijkstras-shortest-path-algorithm-greedy-algo-7/
-#### `Breadth-first search (BFS)`:
-3.	https://favtutor.com/blogs/breadth-first-search-python
-#### `Traveling Salesman Problem (TSP)`:
-4.	https://www.geeksforgeeks.org/traveling-salesman-problem-tsp-implementation/
+#### `1.Arrows in Matplotlib`:
+	https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.arrow.html
+#### `2.Dijkstra's Algorithm`:
+	https://www.geeksforgeeks.org/dijkstras-shortest-path-algorithm-greedy-algo-7/
+#### `3.Breadth first search (BFS)`:
+https://favtutor.com/blogs/breadth-first-search-python
+#### `4.Traveling Salesman Problem (TSP)`:
+	https://www.geeksforgeeks.org/traveling-salesman-problem-tsp-implementation/
+#### `5.graph using Dictionary`:
+https://www.geeksforgeeks.org/generate-graph-using-dictionary-python/
+
 
 # Algorithm Explaining 
 This time we've been asked to build an algorithm for graphs and make an interface that shows the best solution for the "Travelling Salesman Problem", which gave us a list of place that we must visit and returns the quickest way to pass the whole places.
