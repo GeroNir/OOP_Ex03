@@ -11,16 +11,26 @@ from src.GraphAlgoInterface import GraphAlgoInterface
 
 
 class GraphAlgo(GraphAlgoInterface):
+    """This class implements "GraphAlgoInterface"."""
 
+    # constructor with a DiGraph and without, up to user
     def __init__(self, other = None):
         if not other:
             self.graph = DiGraph()
         else:
             self.graph = other
 
+        """
+        :return: the directed graph on which the algorithm works on.
+        """
     def get_graph(self) -> GraphInterface:
         return self.graph
 
+    """
+    Loads a graph from a json file.
+    @param file_name: The path to the json file
+    @returns True if the loading was successful, False o.w.
+    """
     def load_from_json(self, file_name: str) -> bool:
 
         try:
@@ -36,7 +46,7 @@ class GraphAlgo(GraphAlgoInterface):
             self.graph.outEdges = []
             self.graph.inEdges = []
             for n in tmpNodes:
-                try:
+                try: #check if there is attribute 'pos', if not, randomly added a 'pos'
                     tmpNodes[n['pos']]
                 except:
                     node = {}
@@ -57,23 +67,35 @@ class GraphAlgo(GraphAlgoInterface):
                 self.graph.inEdges[e['dest']].insert(0, e)
                 self.graph.outEdges[e['src']].insert(0, e)
                 self.graph.Edges[key] = e
-        except NotImplementedError:
+        except IOError as err:
+            print(err)
             return False
 
+        """
+        Returns the shortest path from node id1 to node id2 using Dijkstra's Algorithm
+        @param id1: The start node id
+        @param id2: The end node id
+        @return: The distance of the path, a list of the nodes ids that the path goes through
+        """
     def shortest_path(self, id1: int, id2: int) -> (float, list):
         dist, prev = self.dijkstra(id1)
         shortest_path = dist[id2]
-        if shortest_path == float('inf'):
+        if shortest_path == float('inf'): # it means that you cant reach to id2, then return 'inf', []
             return float('inf'), []
         tmp = prev[id2]
         ans = []
         ans.insert(0, id2)
         ans.insert(0, tmp)
-        while tmp != id1:
+        while tmp != id1: # for extract all the nodes that you should go
             tmp = prev[tmp]
             ans.insert(0, tmp)
         return shortest_path, ans
 
+    '''
+    This function check if you can reach from one node to every other node. called Connectivity on Graph theory.
+    For more info: https://en.wikipedia.org/wiki/Connectivity_(graph_theory)
+    The logic goes like this: BFS -> Transpose -> BFS the graph is connected iff BFS reach all the nodes
+    '''
     def isConnected(self) -> bool:
         bool = self.BFS_check()
         if bool:
@@ -85,12 +107,16 @@ class GraphAlgo(GraphAlgoInterface):
                 self.getTranspose()
         return False
 
+    '''
+    This function find the shortest path for all the nodes in the graph.
+    For more info: https://en.wikipedia.org/wiki/Dijkstra's_algorithm
+    '''
     def dijkstra(self, src):
         visited = {}
         prev = {}
         queue = Queue()
         dist = {}
-        for n in self.get_graph().get_all_v():
+        for n in self.get_graph().get_all_v(): # set the dist for 'inf' except the src that = 0
             dist[n] = float('inf')
             visited[n] = False
         dist[src] = 0
@@ -107,6 +133,11 @@ class GraphAlgo(GraphAlgoInterface):
             visited[curr] = True
         return dist, prev
 
+    '''
+    This function is a method to check if from a given node you can reach all the nodes.
+    BFS is a method to go through a Graph.
+    For more info: https://en.wikipedia.org/wiki/Breadth-first_search  
+    '''
     def BFS_check (self) -> bool:
         queue = Queue()
         queue.put(self.graph.Nodes[0]['id'])
@@ -114,7 +145,7 @@ class GraphAlgo(GraphAlgoInterface):
         visited.append(self.graph.Nodes[0]['id'])
         while not queue.empty():
             check = queue.get()
-            for e in self.graph.Edges:
+            for e in self.graph.Edges: # go through all the edges and mark the nodes that he visit
                 if self.get_graph().Edges[e]['src'] == check:
                     dest = self.graph.Edges[e]['dest']
                     if dest in visited:
@@ -122,11 +153,14 @@ class GraphAlgo(GraphAlgoInterface):
                     else:
                         queue.put(dest)
                         visited.append(dest)
-        if len(visited) == self.graph.nodeSize:
+        if len(visited) == self.graph.nodeSize: # check if the BFS go through all the graph
             return True
         else:
             return False
 
+    '''
+    This helper function, did a regular dijkstra, but return the max value, using for cenetrPoint()
+    '''
     def dijkstra_max(self, src):
         dist, prev = self.dijkstra(src)
         max = -1
@@ -139,34 +173,23 @@ class GraphAlgo(GraphAlgoInterface):
                 i += 1
         return indx, max
 
+    '''
+    This helper function, did a regular dijkstra, but return the distance list, using for TSP()
+    '''
     def dijkstra_dist(self, src):
-        visited = {}
-        prev = {}
-        queue = Queue()
-        dist = {}
-        for n in self.get_graph().get_all_v():
-            dist[n] = float('inf')
-            visited[n] = False
-        dist[src] = 0
-        queue.put(src)
-        while not queue.empty():
-            curr = queue.get()
-            if visited.get(curr) is False:
-                for e in self.get_graph().Edges.values():
-                    distance = dist[curr] + float(e['w'])
-                    if distance < dist[int(e['dest'])]:
-                        dist[int(e['dest'])] = distance
-                        prev[int(e['dest'])] = int(e['src'])
-                        queue.put(int(e['dest']))
-            visited[curr] = True
+        dist, prev = self.dijkstra(src)
         return dist
 
+    '''
+    This function gets a list with an nodes, and the function returns the "best" order that you can go through all of them.
+    For more info: https://en.wikipedia.org/wiki/Travelling_salesman_problem
+    '''
     def TSP(self, node_lst: List[int]) -> (List[int], float):
         dist = []
         min_dist = float('inf')
         for n in self.get_graph().get_all_v().values():
-            dist.insert(int(n['id']), self.dijkstra_dist(int(n['id'])))
-        for n1 in node_lst:
+            dist.insert(int(n['id']), self.dijkstra_dist(int(n['id']))) # check all the distances
+        for n1 in node_lst: # find the first 2 nodes
             for n2 in node_lst:
                 last_val = dist[n1][n2]
                 if (last_val < min_dist and last_val != 0):
@@ -180,7 +203,7 @@ class GraphAlgo(GraphAlgoInterface):
         node_lst_copy.remove(src)
         node_lst_copy.remove(dest)
         last = dest
-        while len(node_lst_copy) > 0:
+        while len(node_lst_copy) > 0: # check the min dist in a greedy way
             min_dist = float('inf')
             for n in node_lst_copy:
                 last_val = dist[last][n]
@@ -192,6 +215,11 @@ class GraphAlgo(GraphAlgoInterface):
             last = indx
         return ans
 
+    """
+    Saves the graph in JSON format to a file
+    @param file_name: The path to the out file
+    @return: True if the save was successful, False o.w.
+    """
     def save_to_json(self, file_name: str) -> bool:
         try:
             Edges = []
@@ -209,6 +237,9 @@ class GraphAlgo(GraphAlgoInterface):
         except:
             return False
 
+    '''
+    This function returns the Transpose Graph. it mean that is switch the source and the dest of all the edged. 
+    '''
     def getTranspose(self) -> DiGraph:
         new = {}
         for e in self.get_graph().Edges.values():
@@ -220,13 +251,18 @@ class GraphAlgo(GraphAlgoInterface):
         self.get_graph().Edges = new
         return self.get_graph()
 
+    """
+    Finds the node that has the shortest distance to it's farthest node.
+    :return: The nodes id, min-maximum distance
+    """
     def centerPoint(self) -> (int, float):
-        if self.isConnected():
+        if self.isConnected(): # check if the Graph is connected
             cen = []
             for n in self.graph.Nodes:
-                cen.append(self.dijkstra_max(n))
+                cen.append(self.dijkstra_max(n)) # returns the max distance value
             min = float('inf')
-            for i in cen:
+            indx = 0
+            for i in cen: # choose the minimum from all the max values
                 if i[1] < min:
                     min = i[1]
                     indx = i[0]
@@ -234,6 +270,12 @@ class GraphAlgo(GraphAlgoInterface):
         else:
             return -1, float('inf')
 
+    """
+    Plots the graph.
+    If the nodes have a position, the nodes will be placed there.
+    Otherwise, they will be placed in a random but elegant manner.
+    @return: None
+    """
     def plot_graph(self) -> None:
         graph = self.graph
         for src in graph.get_all_v().keys():
