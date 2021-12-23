@@ -83,7 +83,7 @@ And we have another function calls "connect" that make an edge between two nodes
 ### **how to start?**
 first clone this repository using this following command:
  ```
-$git clone https://github.com/GeroNir/OOP_Ex3.git
+$git clone https://github.com/GeroNir/OOP_Ex03.git
  ```
  
 
