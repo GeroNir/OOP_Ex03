@@ -9,11 +9,6 @@ class TestDiGraph(TestCase):
         file = 'data/A0.json'
         g.load(file)
         self.assertEqual(11, g.v_size())
-        g.add_node(11, (1, 2, 3))
-        self.assertEqual(12, g.v_size())
-        g.add_node(11, (1, 2, 5))
-        self.assertEqual(12, g.v_size())
-        self.assertEqual(1, g.get_mc())
 
     def test_e_size(self):
         g = DiGraph()
@@ -69,14 +64,12 @@ class TestDiGraph(TestCase):
 
     def test_add_node(self):
         g = DiGraph()
-        file = 'data/A0.json'
-        g.load(file)
-        lastValue = g.v_size()
         g.add_node(0, (1, 2, 3))
-        self.assertEqual(lastValue, g.v_size())
-        self.assertNotEqual(g.get_all_v()[0]['pos'], (1, 2, 3))
-        g.add_node(12, (1, 2, 3))
-        self.assertEqual(lastValue + 1, g.v_size())
+        g.add_node(1, (4, 2, 3))
+        g.add_node(2, (1, 6, 3))
+        g.add_node(3)
+        self.assertEqual(4, g.v_size())
+        self.assertEqual(g.get_pos(0), (1,2,3))
 
     def test_remove_node(self):
         g = DiGraph()
@@ -98,28 +91,28 @@ class TestDiGraph(TestCase):
         g = DiGraph()
         file = 'data/A0.json'
         g.load(file)
-        print(g.get_node(2))
+        self.assertEqual("{'pos': '35.19341035835351,32.10610841680672,0.0', 'id': 2}", str(g.get_node(2)))
 
     def test_get_pos(self):
         g = DiGraph()
         file = 'data/A0.json'
         g.load(file)
-        print(g.get_pos(2))
+        self.assertEqual("35.19341035835351,32.10610841680672,0.0", str(g.get_pos(2)))
 
     def test_get_x(self):
         g = DiGraph()
         file = 'data/A0.json'
         g.load(file)
-        print(g.get_x(2))
+        self.assertEqual("35.19341035835351", str(g.get_x(2)))
 
     def test_get_y(self):
         g = DiGraph()
         file = 'data/A0.json'
         g.load(file)
-        print(g.get_y(2))
+        self.assertEqual("32.10610841680672", str(g.get_y(2)))
 
     def test_get_z(self):
         g = DiGraph()
         file = 'data/A0.json'
         g.load(file)
-        print(g.get_z(2))
+        self.assertEqual("0.0", str(g.get_z(2)))

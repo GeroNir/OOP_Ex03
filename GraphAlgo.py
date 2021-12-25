@@ -43,11 +43,13 @@ class GraphAlgo(GraphAlgoInterface):
             self.graph.nodeSize = len(tmpNodes)
             self.graph.edgeSize = len(tmpEdges)
             self.graph.MC = 0
-            self.graph.outEdges = []
-            self.graph.inEdges = []
+            self.graph.outEdges = {}
+            self.graph.inEdges = {}
             for n in tmpNodes:
-                try: #check if there is attribute 'pos', if not, randomly added a 'pos'
-                    tmpNodes[n['pos']]
+                self.graph.outEdges[n['id']] = []
+                self.graph.inEdges[n['id']] = []
+                try:
+                    tmpNodes[n['id']]['pos'] #check if there is attribute 'pos', if not, randomly added a 'pos'
                 except:
                     node = {}
                     x = 35 + random.random()
@@ -59,13 +61,11 @@ class GraphAlgo(GraphAlgoInterface):
                     del tmpNodes[n['id']]
                     tmpNodes.insert(n['id'], node)
                     n = node
-                self.graph.outEdges.insert(0, [])
-                self.graph.inEdges.insert(0, [])
                 self.graph.Nodes[n['id']] = n
             for e in tmpEdges:
                 key = str(e['src']) + "," + str(e['dest'])
-                self.graph.inEdges[e['dest']].insert(0, e)
-                self.graph.outEdges[e['src']].insert(0, e)
+                self.graph.inEdges[e['dest']].append(e)
+                self.graph.outEdges[e['src']].append(e)
                 self.graph.Edges[key] = e
         except IOError as err:
             print(err)
@@ -102,6 +102,7 @@ class GraphAlgo(GraphAlgoInterface):
             self.getTranspose()
             bool = self.BFS_check()
             if bool:
+                self.getTranspose()
                 return True
             else:
                 self.getTranspose()
@@ -124,12 +125,16 @@ class GraphAlgo(GraphAlgoInterface):
         while not queue.empty():
             curr = queue.get()
             if visited.get(curr) is False:
-                for e in self.get_graph().Edges.values():
-                    distance = dist[curr] + float(e['w'])
-                    if distance < dist[int(e['dest'])] and e['src'] == curr:
-                        dist[int(e['dest'])] = distance
-                        prev[e['dest']] = int(e['src'])
-                        queue.put(int(e['dest']))
+                try:
+                    for i in range(len(self.get_graph().all_out_edges_of_node(curr)[curr])):
+                        currDict = self.get_graph().all_out_edges_of_node(curr)[curr][i]
+                        distance = dist[curr] + float(currDict['w'])
+                        if distance < dist[int(currDict['dest'])] and currDict['src'] == curr:
+                            dist[int(currDict['dest'])] = distance
+                            prev[currDict['dest']] = int(currDict['src'])
+                            queue.put(int(currDict['dest']))
+                except:
+                    pass
             visited[curr] = True
         return dist, prev
 
@@ -188,7 +193,8 @@ class GraphAlgo(GraphAlgoInterface):
         dist = []
         min_dist = float('inf')
         for n in self.get_graph().get_all_v().values():
-            dist.insert(int(n['id']), self.dijkstra_dist(int(n['id']))) # check all the distances
+            tmp, prev = self.dijkstra(int(n['id']))
+            dist.insert(int(n['id']), tmp) # check all the distances
         for n1 in node_lst: # find the first 2 nodes
             for n2 in node_lst:
                 last_val = dist[n1][n2]
@@ -210,6 +216,8 @@ class GraphAlgo(GraphAlgoInterface):
                 if (last_val < min_dist and last_val != 0):
                     min_dist = last_val
                     indx = n
+            if min_dist == float('inf'):
+                return []
             node_lst_copy.remove(indx)
             ans.append(indx)
             last = indx
