@@ -286,23 +286,6 @@ class GraphAlgo(GraphAlgoInterface):
     """
     def plot_graph(self) -> None:
         graph = self.graph
-        for src in graph.get_all_v().keys():
-            for dest in graph.get_all_v().keys():
-                if dest != src:
-                    radius = 0.0001
-                    x_src = graph.get_x(src)
-                    y_src = graph.get_y(src)
-                    x_dest = graph.get_x(dest)
-                    y_dest = graph.get_y(dest)
-                    distance = math.sqrt((x_src - x_dest) ** 2 + (y_src - y_dest) ** 2)
-                    direction_x = (x_src - x_dest) / distance
-                    direction_y = (y_src - y_dest) / distance
-                    x_dest = direction_x * radius + x_dest
-                    y_dest = direction_y * radius + y_dest
-                    x_src = direction_x * (-radius) + x_src
-                    y_src = direction_y * (-radius) + y_src
-                    gui.arrow(x_src, y_src, (x_dest - x_src), (y_dest - y_src), length_includes_head=True,
-                              width=0.000003, head_width=0.015, color="black")
         for node in graph.get_all_v().keys():
             if graph.get_pos(node) is None:
                 node.pos = (random.uniform(0, 5), random.uniform(0, 5), 0)
@@ -310,17 +293,22 @@ class GraphAlgo(GraphAlgoInterface):
                      verticalalignment='center',
                      bbox=dict(facecolor='green', edgecolor='black', boxstyle='circle, pad=0.1'))
 
+        for src in graph.get_all_v().keys():
+            for dest in graph.outEdges[src]:
+                        radius = 0.0001
+                        x_src = graph.get_x(src)
+                        y_src = graph.get_y(src)
+                        x_dest = graph.get_x(dest.get('dest'))
+                        y_dest = graph.get_y(dest.get('dest'))
+                        distance = math.sqrt((x_src - x_dest) ** 2 + (y_src - y_dest) ** 2)
+                        direction_x = (x_src - x_dest) / distance
+                        direction_y = (y_src - y_dest) / distance
+                        x_dest = direction_x * radius + x_dest
+                        y_dest = direction_y * radius + y_dest
+                        x_src = direction_x * (-radius) + x_src
+                        y_src = direction_y * (-radius) + y_src
+                        gui.arrow(x_src, y_src, (x_dest - x_src), (y_dest - y_src), length_includes_head=True,
+                                  width=0.000003, head_width=0.00025, color="black")
         gui.show()
 
 
-
-# g = DiGraph()
-# algo = GraphAlgo()
-# algo.load_from_json('data/not_connected.json')
-# print(algo.centerPoint())
-# algo.load_from_json('data/A5.json')
-# print(algo.isConnected())
-# print(algo.centerPoint())
-# print(algo.shortest_path(1,7))
-# print(algo.shortest_path(1,7))
-# algo.plot_graph()
